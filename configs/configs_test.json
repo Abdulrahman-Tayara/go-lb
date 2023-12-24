@@ -1,6 +1,7 @@
 {
   "port": "9090",
   "load_balancer_strategy": "round_robin",
+  "health_check_interval_seconds": 5,
   "servers": [
     {
       "url": "http://localhost:8080",

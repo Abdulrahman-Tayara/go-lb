@@ -6,8 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/exp/slog"
 	"net/http"
-	"reflect"
+	"slices"
 	"tayara/go-lb/configs"
+	"tayara/go-lb/healthcheck"
 	"tayara/go-lb/lb"
 	"tayara/go-lb/strategy"
 )
@@ -38,18 +39,27 @@ func main() {
 	selectedStrategy := strategy.GetLoadBalancerStrategy(cfg.LoadBalancerStrategy)
 
 	loadBalancer := lb.NewLoadBalancer(
-		cfg.Servers,
+		slices.Clone(cfg.Servers),
 		selectedStrategy,
 	)
 
+	healthChecker := healthcheck.NewHealthChecker(slices.Clone(cfg.Servers))
+	healthChecker.Attach(loadBalancer)
+
+	healthChecker.Start(cfg.HealthCheckIntervalSeconds)
+
+	runHTTPServer(cfg, loadBalancer)
+}
+
+func runHTTPServer(cfg *configs.Configs, handler http.Handler) {
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%v", cfg.Port),
-		Handler: loadBalancer,
+		Handler: handler,
 	}
 
 	slog.Info("Load Balancer is running",
 		"address", server.Addr,
-		"strategy", reflect.Indirect(reflect.ValueOf(selectedStrategy)).Type().Name(),
+		"configs", *cfg,
 	)
 
 	if err := server.ListenAndServe(); err != nil {

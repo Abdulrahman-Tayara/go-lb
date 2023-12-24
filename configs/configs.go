@@ -5,10 +5,15 @@ import (
 	"tayara/go-lb/models"
 )
 
+const (
+	defaultHealthCheckIntervalSeconds = 5
+)
+
 type Configs struct {
-	Port                 string           `mapstructure:"port" json:"port" yaml:"port"`
-	LoadBalancerStrategy string           `mapstructure:"load_balancer_strategy" json:"load_balancer_strategy" yaml:"load_balancer_strategy"`
-	Servers              []*models.Server `mapstructure:"servers" json:"servers" yaml:"servers"`
+	Port                       string           `mapstructure:"port" json:"port" yaml:"port"`
+	LoadBalancerStrategy       string           `mapstructure:"load_balancer_strategy" json:"load_balancer_strategy" yaml:"load_balancer_strategy"`
+	Servers                    []*models.Server `mapstructure:"servers" json:"servers" yaml:"servers"`
+	HealthCheckIntervalSeconds int              `mapstructure:"health_check_interval_seconds" json:"health_check_interval_seconds" yaml:"health_check_interval_seconds"`
 }
 
 func LoadConfigs(path string) (*Configs, error) {
@@ -24,6 +29,10 @@ func LoadConfigs(path string) (*Configs, error) {
 	err = viper.Unmarshal(&configs)
 	if err != nil {
 		return nil, err
+	}
+
+	if configs.HealthCheckIntervalSeconds == 0 {
+		configs.HealthCheckIntervalSeconds = defaultHealthCheckIntervalSeconds
 	}
 
 	return &configs, nil

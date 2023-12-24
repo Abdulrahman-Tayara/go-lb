@@ -54,3 +54,7 @@ func (s *Server) Host() string {
 
 	return s.host
 }
+
+func (s *Server) Equals(other *Server) bool {
+	return s.Url == other.Url
+}

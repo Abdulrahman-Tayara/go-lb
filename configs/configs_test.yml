@@ -1,5 +1,6 @@
 port: 8900
 load_balancer_strategy: "round_robin"
+health_check_interval_seconds: 3
 servers:
 - url: http://localhost:8080
   health_url: http://localhost:8080/health
