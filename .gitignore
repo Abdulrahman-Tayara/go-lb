@@ -1,0 +1,13 @@
+tmp/
+ipython/__pycache__/
+.vscode/
+data.db
+.idea
+.env
+.env.local
+.local.env
+main
+pid
+output.log
+newrelic_agent.log
+.fleet/

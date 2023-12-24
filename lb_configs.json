@@ -1,0 +1,9 @@
+{
+  "port": "9090",
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "health_url": "http://localhost:8080/health"
+    }
+  ]
+}

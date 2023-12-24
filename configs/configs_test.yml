@@ -1,0 +1,7 @@
+port: 8900
+load_balancer_strategy: "round_robin"
+servers:
+- url: http://localhost:8080
+  health_url: http://localhost:8080/health
+- url: http://localhost:8081
+  health_url: http://localhost:8081/health
