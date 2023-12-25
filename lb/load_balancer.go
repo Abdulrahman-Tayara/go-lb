@@ -47,9 +47,11 @@ func (l *loadBalancer) ServerUp(server *models.Server) {
 	l.Lock()
 
 	// Prevent the duplication
-	l.servers = slices.DeleteFunc(l.servers, func(s *models.Server) bool {
+	if slices.ContainsFunc(l.servers, func(s *models.Server) bool {
 		return s.Equals(server)
-	})
+	}) {
+		return
+	}
 
 	l.servers = append(l.servers, server)
 

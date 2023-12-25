@@ -14,12 +14,6 @@ import (
 	"time"
 )
 
-// Setup servers with health routes
-// Setup load balancer
-// Setup health checker
-// Try to stop some of the servers then check the load balancer state
-// Try to re-setup the servers then check the load balancer
-
 func serverHandler(w http.ResponseWriter, r *http.Request) {
 	if r.RequestURI == "/health" {
 		w.WriteHeader(http.StatusOK)
@@ -68,7 +62,7 @@ func TestE2EIntegration(t *testing.T) {
 
 	lb := lb2.NewLoadBalancer(slices.Clone(serversList), strategy.NewRoundRobinStrategy())
 	lbServer := &models.Server{
-		Url: "http://localhost:9080",
+		Url: "http://localhost:9065",
 	}
 
 	_ = setupServers(func(server *models.Server) http.Handler {
@@ -113,4 +107,17 @@ func TestE2EIntegration(t *testing.T) {
 
 	assert.Error(t, err)
 
+	// Re-setup the first server
+	server1Http = setupServers(func(server *models.Server) http.Handler {
+		return http.HandlerFunc(serverHandler)
+	}, server1)
+
+	// Wait the health checker to re-check
+	time.Sleep(time.Duration(healthCheckInterval) * time.Second)
+
+	// Try 100 requests on the load balancer with one server
+	for i := 0; i < 100; i++ {
+		err := doRequest(endpointUrl)
+		assert.NoError(t, err)
+	}
 }
