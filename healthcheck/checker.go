@@ -72,7 +72,7 @@ func (h *HealthChecker) checkAndNotify(
 }
 
 func (h *HealthChecker) isHealthy(server *models.Server) bool {
-	res, err := h.httpClient.Get(server.HealthUrl)
+	res, err := h.httpClient.Get(server.GetHealthUrl())
 	return err == nil && res.StatusCode == http.StatusOK
 }
 

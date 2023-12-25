@@ -61,6 +61,11 @@ func (l *loadBalancer) ServerUp(server *models.Server) {
 func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	selectedServer := l.Next(request)
 
+	if selectedServer == nil {
+		writer.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
 	parsedUrl, _ := url2.Parse(selectedServer.Url)
 
 	proxy := httputil.NewSingleHostReverseProxy(parsedUrl)
