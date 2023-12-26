@@ -50,3 +50,6 @@ func (s *RoundRobinStrategy) UpdateServers(servers []*models.Server) {
 	s.servers = servers
 	s.index = 0
 }
+
+func (s *RoundRobinStrategy) RequestServed(server *models.Server, request *http.Request) {
+}

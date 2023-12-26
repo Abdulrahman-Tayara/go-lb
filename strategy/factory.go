@@ -12,6 +12,8 @@ func GetLoadBalancerStrategy(strategy string) ILoadBalancerStrategy {
 		return NewRoundRobinStrategy()
 	case RandomLoadBalancerStrategy:
 		return NewRandomStrategy()
+	case LeastConnectionsLoadBalancerStrategy:
+		return NewLeastConnectionsStrategy()
 	default:
 		return NewRoundRobinStrategy()
 	}

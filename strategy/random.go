@@ -41,3 +41,6 @@ func (r *RandomStrategy) UpdateServers(servers []*models.Server) {
 
 	r.servers = servers
 }
+
+func (r *RandomStrategy) RequestServed(server *models.Server, request *http.Request) {
+}

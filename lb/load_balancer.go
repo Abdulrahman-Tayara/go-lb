@@ -73,6 +73,8 @@ func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	proxy := httputil.NewSingleHostReverseProxy(parsedUrl)
 
 	proxy.ServeHTTP(writer, request)
+
+	l.strategy.RequestServed(selectedServer, request)
 }
 
 func (l *loadBalancer) Next(request *http.Request) *models.Server {
