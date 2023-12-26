@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoundRobin_GetSelectedServer(t *testing.T) {
+func TestRoundRobin_Next(t *testing.T) {
 	rr := NewRoundRobinStrategy()
 	rr.UpdateServers([]*models.Server{
 		{
@@ -35,7 +35,7 @@ func TestRoundRobin_GetSelectedServer(t *testing.T) {
 	}
 }
 
-func TestRoundRobin_GetSelectedServer_EmptyServersList(t *testing.T) {
+func TestRoundRobin_Next_EmptyServersList(t *testing.T) {
 	rr := NewRoundRobinStrategy()
 	rr.UpdateServers([]*models.Server{})
 
@@ -44,7 +44,7 @@ func TestRoundRobin_GetSelectedServer_EmptyServersList(t *testing.T) {
 	assert.Nil(t, server)
 }
 
-func TestRoundRobin_GetSelectedServer_UpdateServers(t *testing.T) {
+func TestRoundRobin_Next_UpdateServers(t *testing.T) {
 	rr := NewRoundRobinStrategy()
 
 	rr.UpdateServers([]*models.Server{

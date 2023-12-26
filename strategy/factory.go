@@ -9,8 +9,10 @@ const (
 func GetLoadBalancerStrategy(strategy string) ILoadBalancerStrategy {
 	switch strategy {
 	case RoundRobinLoadBalancerStrategy:
-		return &RoundRobinStrategy{}
+		return NewRoundRobinStrategy()
+	case RandomLoadBalancerStrategy:
+		return NewRandomStrategy()
 	default:
-		return &RoundRobinStrategy{}
+		return NewRoundRobinStrategy()
 	}
 }
