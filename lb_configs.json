@@ -5,5 +5,8 @@
       "url": "http://localhost:8080",
       "health_url": "http://localhost:8080/health"
     }
-  ]
+  ],
+  "rate_limiter_enabled": true,
+  "rate_limit_tokens": 10,
+  "rate_limit_interval_seconds": 1
 }

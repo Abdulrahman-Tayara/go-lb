@@ -2,6 +2,9 @@
   "port": "9090",
   "load_balancer_strategy": "round_robin",
   "health_check_interval_seconds": 5,
+  "rate_limiter_enabled": true,
+  "rate_limit_tokens": 10,
+  "rate_limit_interval_seconds": 10,
   "servers": [
     {
       "url": "http://localhost:8080",

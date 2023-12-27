@@ -28,6 +28,9 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
   "port": "load balancer port",
   "strategy": "round_robin | random | least_connections",
   "health_check_interval_seconds": 2,
+  "rate_limiter_enabled": true,
+  "rate_limit_tokens": 10, // default 10
+  "rate_limit_interval_seconds": 1 // default 2
   "servers": [
     {
       "url": "http://localhost:8080",
@@ -46,6 +49,9 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 port: "load balancer port"
 strategy: "round_robin | random | least_connections"
 health_check_interval_seconds: 2
+rate_limiter_enabled: True
+rate_limit_tokens: 10 # default 10
+rate_limit_interval_seconds: 10 # default 2
 servers:
   - url: "http://localhost:8080"
     health_url: "/health"

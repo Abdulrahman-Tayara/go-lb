@@ -10,7 +10,9 @@ import (
 	"tayara/go-lb/configs"
 	"tayara/go-lb/healthcheck"
 	"tayara/go-lb/lb"
+	"tayara/go-lb/ratelimiter/buckettokens"
 	"tayara/go-lb/strategy"
+	"time"
 )
 
 var (
@@ -45,10 +47,21 @@ func main() {
 
 	healthChecker := healthcheck.NewHealthChecker(slices.Clone(cfg.Servers))
 	healthChecker.Attach(loadBalancer)
-
 	healthChecker.Start(cfg.HealthCheckIntervalSeconds)
 
-	runHTTPServer(cfg, loadBalancer)
+	var httpHandler http.Handler = loadBalancer
+
+	if cfg.RateLimiterEnabled {
+		httpHandler = buckettokens.LimiterMiddleware(
+			loadBalancer,
+			buckettokens.NewConfigs(
+				time.Second*time.Duration(cfg.RateLimitIntervalSeconds),
+				cfg.RateLimitTokens,
+			),
+		)
+	}
+
+	runHTTPServer(cfg, httpHandler)
 }
 
 func runHTTPServer(cfg *configs.Configs, handler http.Handler) {
