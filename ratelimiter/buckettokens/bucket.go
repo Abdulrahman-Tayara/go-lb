@@ -19,7 +19,7 @@ func (b *bucket) hasTokens() bool {
 }
 
 func (b *bucket) shouldReset(rate time.Duration) bool {
-	return b.last.Add(rate).After(time.Now())
+	return time.Now().After(b.last.Add(rate))
 }
 
 type buckets struct {

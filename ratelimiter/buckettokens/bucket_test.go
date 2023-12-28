@@ -24,7 +24,7 @@ func TestBucket_ShouldReset(t *testing.T) {
 				},
 				rate: time.Second * 2,
 			},
-			want: true,
+			want: false,
 		},
 		{
 			name: "should not reset",
@@ -34,7 +34,7 @@ func TestBucket_ShouldReset(t *testing.T) {
 				},
 				rate: time.Second * 2,
 			},
-			want: false,
+			want: true,
 		},
 	}
 
