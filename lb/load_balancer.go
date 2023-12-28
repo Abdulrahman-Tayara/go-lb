@@ -10,6 +10,11 @@ import (
 	"tayara/go-lb/healthcheck"
 	"tayara/go-lb/models"
 	lbs "tayara/go-lb/strategy"
+	"time"
+)
+
+const (
+	numberOfRetries = 5
 )
 
 // ILoadBalancer interface
@@ -61,12 +66,14 @@ func (l *loadBalancer) ServerUp(server *models.Server) {
 }
 
 func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	selectedServer := l.Next(request)
+	selectedServer := l.nextWithRetries(request, numberOfRetries)
 
 	if selectedServer == nil {
 		writer.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
+
+	t := time.Now()
 
 	parsedUrl, _ := url2.Parse(selectedServer.Url)
 
@@ -75,6 +82,22 @@ func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 	proxy.ServeHTTP(writer, request)
 
 	l.strategy.RequestServed(selectedServer, request)
+
+	slog.Info("request served in", "server", selectedServer.Url, "time", time.Since(t))
+}
+
+func (l *loadBalancer) nextWithRetries(request *http.Request, retries int) *models.Server {
+	for i := 0; i < retries; i++ {
+		server := l.Next(request)
+
+		if server != nil {
+			return server
+		}
+
+		time.Sleep(time.Second * time.Duration(i+1))
+	}
+
+	return nil
 }
 
 func (l *loadBalancer) Next(request *http.Request) *models.Server {
