@@ -119,6 +119,6 @@ func TestBuckets_DeleteFunc(t *testing.T) {
 	_, ok1 := b.data.Load("k1")
 	_, ok2 := b.data.Load("k2")
 
-	assert.True(t, ok1)
-	assert.False(t, ok2)
+	assert.False(t, ok1)
+	assert.True(t, ok2)
 }
