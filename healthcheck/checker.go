@@ -2,6 +2,7 @@ package healthcheck
 
 import (
 	"net/http"
+	"sync"
 	"tayara/go-lb/models"
 	"time"
 )
@@ -20,6 +21,8 @@ type HealthChecker struct {
 	serversStatues map[*models.Server]bool
 
 	httpClient *http.Client
+
+	sync.RWMutex
 }
 
 func (h *HealthChecker) Attach(observer IObserver) {
@@ -77,6 +80,10 @@ func (h *HealthChecker) isHealthy(server *models.Server) bool {
 }
 
 func (h *HealthChecker) didStatusChanged(server *models.Server, isHealthy bool) bool {
+	defer h.RUnlock()
+
+	h.RLock()
+
 	current, exists := h.serversStatues[server]
 	if !exists {
 		return true
@@ -97,6 +104,10 @@ func (h *HealthChecker) notifyServerDown(server *models.Server) {
 }
 
 func (h *HealthChecker) changeServerStatus(server *models.Server, status bool) {
+	defer h.Unlock()
+
+	h.Lock()
+
 	h.serversStatues[server] = status
 }
 
