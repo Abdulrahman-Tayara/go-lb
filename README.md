@@ -26,7 +26,7 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 ```json
 {
   "port": "load balancer port",
-  "strategy": "round_robin | random | least_connections",
+  "strategy": "round_robin | random | least_connections", // default round_robin
   "health_check_interval_seconds": 2,
   "rate_limiter_enabled": true,
   "rate_limit_tokens": 10, // default 10
@@ -40,14 +40,17 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
       "url": "http://localhost:8082",
       "health_url": "/health-check"
     }
-  ]
+  ],
+  "tls_enabled": true, // default false
+  "tls_cert_file": "/path/to/cert.pem",
+  "tls_key_file": "/path/to/key.pem"
 }
 ```
 
 ### Yaml
 ```yaml
 port: "load balancer port"
-strategy: "round_robin | random | least_connections"
+strategy: "round_robin | random | least_connections" # default round_robin
 health_check_interval_seconds: 2
 rate_limiter_enabled: True
 rate_limit_tokens: 10 # default 10
@@ -57,6 +60,9 @@ servers:
     health_url: "/health"
   - url: "http://localhost:8082"
     health_url: "/health-check"
+tls_enabled: true # default false
+tls_cert_file: "/path/on/container/cert.pem"
+tls_key_file: "/path/on/container/key.pem"
 ```
 
 ## Getting Started
@@ -69,6 +75,20 @@ git clone https://github.com/Abdulrahman-Tayara/go-lb.git
 docker build . -t go-lb:latest
 
 docker run -p <port>:<port> -e CONFIG_FILE=/path/on/container/config.json -v /path/on/host/config.json:/path/on/container/config.json go-lb:latest
+```
+
+If the TLS is enabled:
+
+```bash
+git clone https://github.com/Abdulrahman-Tayara/go-lb.git
+
+docker build . -t go-lb:latest
+
+docker run -p <port>:<port> -e CONFIG_FILE=/path/on/container/config.json \
+  -v /path/on/host/config.json:/path/on/container/config.json \
+  -v /path/on/host/cert.pem:/path/on/container/cert.pem \
+  -v /path/on/host/key.pem:/path/on/container/key.pem \
+  go-lb:latest
 ```
 
 ## Contributing

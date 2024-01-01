@@ -75,7 +75,20 @@ func runHTTPServer(cfg *configs.Configs, handler http.Handler) {
 		"configs", *cfg,
 	)
 
-	if err := server.ListenAndServe(); err != nil {
-		panic(err)
+	if cfg.TLSEnabled {
+		if !IsFileExist(cfg.TLSCertPath) {
+			panic(fmt.Errorf("TLS cert filepath doesn't exist %v", cfg.TLSCertPath))
+		}
+		if !IsFileExist(cfg.TLSKeyPath) {
+			panic(fmt.Errorf("TLS key filepath doesn't exist %v", cfg.TLSKeyPath))
+		}
+
+		if err := server.ListenAndServeTLS(cfg.TLSCertPath, cfg.TLSKeyPath); err != nil {
+			panic(err)
+		}
+	} else {
+		if err := server.ListenAndServe(); err != nil {
+			panic(err)
+		}
 	}
 }
