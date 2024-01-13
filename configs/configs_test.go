@@ -26,6 +26,7 @@ func TestLoadConfigs(t *testing.T) {
 				Port: "9090",
 				Servers: []*models.Server{
 					{
+						Name:      "server1",
 						Url:       "http://localhost:8080",
 						HealthUrl: "http://localhost:8080/health",
 					},
@@ -45,10 +46,12 @@ func TestLoadConfigs(t *testing.T) {
 				Port: "8900",
 				Servers: []*models.Server{
 					{
+						Name:      "server1",
 						Url:       "http://localhost:8080",
 						HealthUrl: "http://localhost:8080/health",
 					},
 					{
+						Name:      "server2",
 						Url:       "http://localhost:8081",
 						HealthUrl: "http://localhost:8081/health",
 					},

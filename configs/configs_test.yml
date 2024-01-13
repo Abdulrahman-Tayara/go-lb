@@ -5,7 +5,9 @@ rate_limiter_enabled: True
 rate_limit_tokens: 10
 rate_limit_interval_seconds: 10
 servers:
-- url: http://localhost:8080
+- name: server1
+  url: http://localhost:8080
   health_url: http://localhost:8080/health
-- url: http://localhost:8081
+- name: server2
+  url: http://localhost:8081
   health_url: http://localhost:8081/health
