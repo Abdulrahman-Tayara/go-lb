@@ -13,6 +13,7 @@ type Configs struct {
 	Port                       string           `mapstructure:"port" json:"port" yaml:"port"`
 	LoadBalancerStrategy       string           `mapstructure:"load_balancer_strategy" json:"load_balancer_strategy" yaml:"load_balancer_strategy"`
 	Servers                    []*models.Server `mapstructure:"servers" json:"servers" yaml:"servers"`
+	Routing                    models.Routing   `mapstructure:"routing" json:"routing" yaml:"routing"`
 	HealthCheckIntervalSeconds int              `mapstructure:"health_check_interval_seconds" json:"health_check_interval_seconds" yaml:"health_check_interval_seconds"`
 	RateLimiterEnabled         bool             `mapstructure:"rate_limiter_enabled" json:"rate_limiter_enabled" yaml:"rate_limiter_enabled"`
 	RateLimitTokens            int              `mapstructure:"rate_limit_tokens" json:"rate_limit_tokens" yaml:"rate_limit_tokens"`

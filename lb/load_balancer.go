@@ -26,8 +26,10 @@ type ILoadBalancer interface {
 // -----------------------
 
 type loadBalancer struct {
-	servers  []*models.Server
-	strategy lbs.ILoadBalancerStrategy
+	servers    []*models.Server
+	strategy   lbs.ILoadBalancerStrategy
+	cbr        *models.Routing
+	cbrEnabled bool
 
 	sync.RWMutex
 }
@@ -105,13 +107,47 @@ func (l *loadBalancer) Next(request *http.Request) *models.Server {
 
 	l.RLock()
 
+	if l.cbrEnabled {
+		return l.getServerFromCbr(request)
+	}
+
 	return l.strategy.Next(request)
 }
 
-func NewLoadBalancer(servers []*models.Server, strategy lbs.ILoadBalancerStrategy) ILoadBalancer {
+func (l *loadBalancer) getServerFromCbr(req *http.Request) *models.Server {
+	serverName := l.cbr.Rules.GetRouteTo(&models.RequestProps{
+		Method:  req.Method,
+		Headers: req.Header,
+		Path:    req.URL.Path,
+	})
+
+	if serverName == "" {
+		serverName = l.cbr.DefaultServer
+	}
+
+	return l.serverByName(serverName)
+}
+
+func (l *loadBalancer) serverByName(name string) *models.Server {
+	for _, server := range l.servers {
+		if server.Name == name {
+			return server
+		}
+	}
+
+	return nil
+}
+
+func NewLoadBalancer(
+	servers []*models.Server,
+	cbr *models.Routing,
+	strategy lbs.ILoadBalancerStrategy,
+) ILoadBalancer {
 	strategy.UpdateServers(servers)
 	return &loadBalancer{
-		servers:  servers,
-		strategy: strategy,
+		servers:    servers,
+		strategy:   strategy,
+		cbr:        cbr,
+		cbrEnabled: cbr != nil && len(cbr.Rules) > 0,
 	}
 }

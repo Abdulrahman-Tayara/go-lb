@@ -18,7 +18,7 @@ func TestLoadBalancer_ServerDown(t *testing.T) {
 		},
 	}
 
-	lb := NewLoadBalancer(slices.Clone(servers), strategy.NewRoundRobinStrategy()).(*loadBalancer)
+	lb := NewLoadBalancer(slices.Clone(servers), nil, strategy.NewRoundRobinStrategy()).(*loadBalancer)
 
 	assert.Equal(t, len(servers), len(lb.servers))
 
@@ -36,7 +36,7 @@ func TestLoadBalancer_ServerUp(t *testing.T) {
 		},
 	}
 
-	lb := NewLoadBalancer(slices.Clone(servers), strategy.NewRoundRobinStrategy()).(*loadBalancer)
+	lb := NewLoadBalancer(slices.Clone(servers), nil, strategy.NewRoundRobinStrategy()).(*loadBalancer)
 
 	assert.Equal(t, len(servers), len(lb.servers))
 

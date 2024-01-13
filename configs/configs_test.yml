@@ -11,3 +11,13 @@ servers:
 - name: server2
   url: http://localhost:8081
   health_url: http://localhost:8081/health
+routing:
+  rules:
+    - conditions:
+        - path_prefix: "/api/v1"
+          method: "GET"
+          headers:
+            useragent: "Mobile"
+      action:
+        route_to: server1
+  default_server: server2

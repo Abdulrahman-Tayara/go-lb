@@ -60,7 +60,7 @@ func TestE2EIntegration(t *testing.T) {
 
 	serversList := []*models.Server{server1, server2}
 
-	lb := lb2.NewLoadBalancer(slices.Clone(serversList), strategy.NewRoundRobinStrategy())
+	lb := lb2.NewLoadBalancer(slices.Clone(serversList), nil, strategy.NewRoundRobinStrategy())
 	lbServer := &models.Server{
 		Url: "http://localhost:9065",
 	}

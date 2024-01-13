@@ -33,10 +33,12 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
   "rate_limit_interval_seconds": 1 // default 2
   "servers": [
     {
+      "name": "server1",
       "url": "http://localhost:8080",
       "health_url": "/health"
     },
     {
+      "name": "server2",
       "url": "http://localhost:8082",
       "health_url": "/health-check"
     }
@@ -56,14 +58,96 @@ rate_limiter_enabled: True
 rate_limit_tokens: 10 # default 10
 rate_limit_interval_seconds: 10 # default 2
 servers:
-  - url: "http://localhost:8080"
+  - name: "server1"
+    url: "http://localhost:8080"
     health_url: "/health"
-  - url: "http://localhost:8082"
+  - name: "server2"
+    url: "http://localhost:8082"
     health_url: "/health-check"
 tls_enabled: true # default false
 tls_cert_file: "/path/on/container/cert.pem"
 tls_key_file: "/path/on/container/key.pem"
 ```
+
+## Content Based Routing (CBR) Configuration
+
+### JSON
+```json
+{
+  "port": "load balancer port",
+  "strategy": "round_robin | random | least_connections",
+  "health_check_interval_seconds": 2,
+  "rate_limiter_enabled": true,
+  "rate_limit_tokens": 10,
+  "rate_limit_interval_seconds": 1,
+  "servers": [
+    {
+      "name": "server1",
+      "url": "http://localhost:8080",
+      "health_url": "/health"
+    },
+    {
+      "name": "server2",
+      "url": "http://localhost:8082",
+      "health_url": "/health-check"
+    }
+  ],
+  "tls_enabled": true,
+  "tls_cert_file": "/path/to/cert.pem",
+  "tls_key_file": "/path/to/key.pem",
+  "routing": {
+    "default_server": "server1",
+    "rules": [
+      {
+        "conditions": [
+          {
+            "path_prefix": "/api/v1 (Optional)",
+            "method": "GET | post | Put (Optional)",
+            "headers": { // Optional
+              "MyHeader": "my-value"
+            }
+          }
+        ],
+        "action": {
+          "route_to": "server2"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Yaml
+```yaml
+port: "load balancer port"
+strategy: "round_robin | random | least_connections"
+health_check_interval_seconds: 2
+rate_limiter_enabled: True
+rate_limit_tokens: 10
+rate_limit_interval_seconds: 10
+servers:
+  - url: "http://localhost:8080"
+    health_url: "/health"
+  - url: "http://localhost:8082"
+    health_url: "/health-check"
+tls_enabled: true
+tls_cert_file: "/path/on/container/cert.pem"
+tls_key_file: "/path/on/container/key.pem"
+routing:
+  default_server: "server1"
+  rules:
+    - conditions:
+        - path_prefix: "/api/v1"
+          method: "GET"
+          headers:
+            MyHeader: "my-value"
+      action:
+        route_to: "server2"
+```
+
+
+
+
 
 ## Getting Started
 

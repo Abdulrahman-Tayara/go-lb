@@ -75,6 +75,7 @@ func TestLoadBalancerRequestForwarding(t *testing.T) {
 	}
 	lb := lb2.NewLoadBalancer(
 		[]*models.Server{&destServer},
+		nil,
 		strategy.NewRoundRobinStrategy(),
 	)
 

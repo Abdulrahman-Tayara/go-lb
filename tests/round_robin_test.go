@@ -34,6 +34,7 @@ func TestLoadBalancerWithRoundRobin(t *testing.T) {
 
 	lb := lb2.NewLoadBalancer(
 		servers,
+		nil,
 		strategy.NewRoundRobinStrategy(),
 	)
 

@@ -56,6 +56,25 @@ func TestLoadConfigs(t *testing.T) {
 						HealthUrl: "http://localhost:8081/health",
 					},
 				},
+				Routing: models.Routing{
+					DefaultServer: "server2",
+					Rules: models.RouteRules{
+						{
+							Conditions: []models.RouteCondition{
+								{
+									PathPrefix: "/api/v1",
+									Method:     "GET",
+									Headers: map[string]string{
+										"useragent": "Mobile",
+									},
+								},
+							},
+							Action: models.RouteAction{
+								RouteTo: "server1",
+							},
+						},
+					},
+				},
 				LoadBalancerStrategy:       "round_robin",
 				HealthCheckIntervalSeconds: 3,
 				RateLimiterEnabled:         true,

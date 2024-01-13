@@ -42,6 +42,7 @@ func main() {
 
 	loadBalancer := lb.NewLoadBalancer(
 		slices.Clone(cfg.Servers),
+		&cfg.Routing,
 		selectedStrategy,
 	)
 
