@@ -6,7 +6,7 @@ const (
 	LeastConnectionsLoadBalancerStrategy = "least_connections"
 )
 
-func GetLoadBalancerStrategy(strategy string) ILoadBalancerStrategy {
+func GetLoadBalancerStrategy(strategy string, cfg Configs) ILoadBalancerStrategy {
 	switch strategy {
 	case RoundRobinLoadBalancerStrategy:
 		return NewRoundRobinStrategy()

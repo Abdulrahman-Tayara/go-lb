@@ -27,6 +27,11 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 {
   "port": "load balancer port",
   "strategy": "round_robin | random | least_connections", // default round_robin
+  "strategy_configs": {
+    // Sticky session configs
+    "sticky_session_cookie_name": "example",
+    "sticky_session_ttl_seconds": 100
+  },
   "health_check_interval_seconds": 2,
   "rate_limiter_enabled": true,
   "rate_limit_tokens": 10, // default 10
@@ -53,6 +58,10 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 ```yaml
 port: "load balancer port"
 strategy: "round_robin | random | least_connections" # default round_robin
+strategy_configs:
+  # Sticky session configs
+  sticky_session_cookie_name: "example"
+  sticky_session_ttl_seconds: 100
 health_check_interval_seconds: 2
 rate_limiter_enabled: True
 rate_limit_tokens: 10 # default 10

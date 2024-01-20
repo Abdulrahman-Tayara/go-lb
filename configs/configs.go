@@ -1,8 +1,10 @@
 package configs
 
 import (
-	"github.com/spf13/viper"
 	"tayara/go-lb/models"
+	"tayara/go-lb/strategy"
+
+	"github.com/spf13/viper"
 )
 
 const (
@@ -12,6 +14,7 @@ const (
 type Configs struct {
 	Port                       string           `mapstructure:"port" json:"port" yaml:"port"`
 	LoadBalancerStrategy       string           `mapstructure:"load_balancer_strategy" json:"load_balancer_strategy" yaml:"load_balancer_strategy"`
+	StrategyConfigs            strategy.Configs `mapstructure:"strategy_configs" json:"strategy_configs" yaml:"strategy_configs"`
 	Servers                    []*models.Server `mapstructure:"servers" json:"servers" yaml:"servers"`
 	Routing                    models.Routing   `mapstructure:"routing" json:"routing" yaml:"routing"`
 	HealthCheckIntervalSeconds int              `mapstructure:"health_check_interval_seconds" json:"health_check_interval_seconds" yaml:"health_check_interval_seconds"`

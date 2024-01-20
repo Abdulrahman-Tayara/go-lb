@@ -3,8 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/pkg/errors"
-	"golang.org/x/exp/slog"
 	"net/http"
 	"slices"
 	"tayara/go-lb/configs"
@@ -13,6 +11,9 @@ import (
 	"tayara/go-lb/ratelimiter/buckettokens"
 	"tayara/go-lb/strategy"
 	"time"
+
+	"github.com/pkg/errors"
+	"golang.org/x/exp/slog"
 )
 
 var (
@@ -38,7 +39,7 @@ func main() {
 
 	slog.Info("configs were loaded", "configs", *cfg)
 
-	selectedStrategy := strategy.GetLoadBalancerStrategy(cfg.LoadBalancerStrategy)
+	selectedStrategy := strategy.GetLoadBalancerStrategy(cfg.LoadBalancerStrategy, cfg.StrategyConfigs)
 
 	loadBalancer := lb.NewLoadBalancer(
 		slices.Clone(cfg.Servers),
