@@ -3,6 +3,7 @@ package configs
 import (
 	"reflect"
 	"tayara/go-lb/models"
+	"tayara/go-lb/strategy"
 	"testing"
 )
 
@@ -31,7 +32,11 @@ func TestLoadConfigs(t *testing.T) {
 						HealthUrl: "http://localhost:8080/health",
 					},
 				},
-				LoadBalancerStrategy:       "round_robin",
+				LoadBalancerStrategy: "round_robin",
+				StrategyConfigs: strategy.Configs{
+					StickySessionCookieName: "example",
+					StickySessionTTLSeconds: 100,
+				},
 				HealthCheckIntervalSeconds: 5,
 				RateLimiterEnabled:         true,
 				RateLimitIntervalSeconds:   10,
@@ -75,7 +80,11 @@ func TestLoadConfigs(t *testing.T) {
 						},
 					},
 				},
-				LoadBalancerStrategy:       "round_robin",
+				LoadBalancerStrategy: "round_robin",
+				StrategyConfigs: strategy.Configs{
+					StickySessionCookieName: "example",
+					StickySessionTTLSeconds: 100,
+				},
 				HealthCheckIntervalSeconds: 3,
 				RateLimiterEnabled:         true,
 				RateLimitIntervalSeconds:   10,

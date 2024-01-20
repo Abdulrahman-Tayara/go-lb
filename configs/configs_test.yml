@@ -1,5 +1,8 @@
 port: 8900
 load_balancer_strategy: "round_robin"
+strategy_configs:
+  sticky_session_cookie_name: "example"
+  sticky_session_ttl_seconds: 100
 health_check_interval_seconds: 3
 rate_limiter_enabled: True
 rate_limit_tokens: 10
