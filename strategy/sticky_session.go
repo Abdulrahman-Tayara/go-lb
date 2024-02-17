@@ -64,7 +64,8 @@ func hashSessionToInt(sessionId string) int {
 func (*StickySessionStrategy) RequestServed(server *models.Server, request *http.Request) {
 }
 
-func (*StickySessionStrategy) UpdateServers(servers []*models.Server) {
+func (s *StickySessionStrategy) UpdateServers(servers []*models.Server) {
+	s.servers = servers
 }
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")

@@ -4,6 +4,7 @@ const (
 	RoundRobinLoadBalancerStrategy       = "round_robin"
 	RandomLoadBalancerStrategy           = "random"
 	LeastConnectionsLoadBalancerStrategy = "least_connections"
+	StickySessionLoadBalancerStrategy    = "stick_session"
 )
 
 func GetLoadBalancerStrategy(strategy string, cfg Configs) ILoadBalancerStrategy {
@@ -14,6 +15,8 @@ func GetLoadBalancerStrategy(strategy string, cfg Configs) ILoadBalancerStrategy
 		return NewRandomStrategy()
 	case LeastConnectionsLoadBalancerStrategy:
 		return NewLeastConnectionsStrategy()
+	case StickySessionLoadBalancerStrategy:
+		return NewStickySessionStrategy(cfg)
 	default:
 		return NewRoundRobinStrategy()
 	}
