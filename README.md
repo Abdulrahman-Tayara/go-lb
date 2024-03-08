@@ -40,12 +40,14 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
     {
       "name": "server1",
       "url": "http://localhost:8080",
-      "health_url": "/health"
+      "health_url": "/health",
+      "weight": 1,
     },
     {
       "name": "server2",
       "url": "http://localhost:8082",
-      "health_url": "/health-check"
+      "health_url": "/health-check",
+      "weight": 2
     }
   ],
   "tls_enabled": true, // default false
@@ -70,9 +72,11 @@ servers:
   - name: "server1"
     url: "http://localhost:8080"
     health_url: "/health"
+    weight: 1
   - name: "server2"
     url: "http://localhost:8082"
     health_url: "/health-check"
+    weight: 2
 tls_enabled: true # default false
 tls_cert_file: "/path/on/container/cert.pem"
 tls_key_file: "/path/on/container/key.pem"
@@ -93,12 +97,14 @@ tls_key_file: "/path/on/container/key.pem"
     {
       "name": "server1",
       "url": "http://localhost:8080",
-      "health_url": "/health"
+      "health_url": "/health",
+      "weight": 1
     },
     {
       "name": "server2",
       "url": "http://localhost:8082",
-      "health_url": "/health-check"
+      "health_url": "/health-check",
+      "weight": 2
     }
   ],
   "tls_enabled": true,
@@ -137,8 +143,10 @@ rate_limit_interval_seconds: 10
 servers:
   - url: "http://localhost:8080"
     health_url: "/health"
+    weight: 1
   - url: "http://localhost:8082"
     health_url: "/health-check"
+    weight: 2
 tls_enabled: true
 tls_cert_file: "/path/on/container/cert.pem"
 tls_key_file: "/path/on/container/key.pem"

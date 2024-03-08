@@ -13,6 +13,7 @@ type Server struct {
 	Name      string `mapstructure:"name" json:"name" yaml:"name"`
 	Url       string `mapstructure:"url" json:"url" yaml:"url"`
 	HealthUrl string `mapstructure:"health_url" json:"health_url" yaml:"health_url"`
+	Weight    int    `mapstructure:"weight" json:"weight" yaml:"weight"`
 
 	host              string
 	absoluteHealthUrl string
