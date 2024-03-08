@@ -10,6 +10,7 @@ import (
 	"tayara/go-lb/lb"
 	"tayara/go-lb/ratelimiter/buckettokens"
 	"tayara/go-lb/strategy"
+	"tayara/go-lb/utils"
 	"time"
 
 	"github.com/pkg/errors"
@@ -78,10 +79,10 @@ func runHTTPServer(cfg *configs.Configs, handler http.Handler) {
 	)
 
 	if cfg.TLSEnabled {
-		if !IsFileExist(cfg.TLSCertPath) {
+		if !utils.IsFileExist(cfg.TLSCertPath) {
 			panic(fmt.Errorf("TLS cert filepath doesn't exist %v", cfg.TLSCertPath))
 		}
-		if !IsFileExist(cfg.TLSKeyPath) {
+		if !utils.IsFileExist(cfg.TLSKeyPath) {
 			panic(fmt.Errorf("TLS key filepath doesn't exist %v", cfg.TLSKeyPath))
 		}
 
