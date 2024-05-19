@@ -26,7 +26,7 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 ```json
 {
   "port": "load balancer port",
-  "strategy": "round_robin | sticky_session | least_connections | random", // default round_robin
+  "strategy": "round_robin | weighted_round_robin | sticky_session | least_connections | random", // default round_robin
   "strategy_configs": {
     // Sticky session configs
     "sticky_session_cookie_name": "example",
@@ -59,7 +59,7 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
 ### Yaml
 ```yaml
 port: "load balancer port"
-strategy: "round_robin | sticky_session | least_connections | random" # default round_robin
+strategy: "round_robin | weighted_round_robin | sticky_session | least_connections | random" # default round_robin
 strategy_configs:
   # Sticky session configs
   sticky_session_cookie_name: "example"
@@ -88,7 +88,7 @@ tls_key_file: "/path/on/container/key.pem"
 ```json
 {
   "port": "load balancer port",
-  "strategy": "round_robin | sticky_session | least_connections | random",
+  "strategy": "round_robin | weighted_round_robin | sticky_session | least_connections | random",
   "health_check_interval_seconds": 2,
   "rate_limiter_enabled": true,
   "rate_limit_tokens": 10,
@@ -135,7 +135,7 @@ tls_key_file: "/path/on/container/key.pem"
 ### Yaml
 ```yaml
 port: "load balancer port"
-strategy: "round_robin | sticky_session | least_connections | random"
+strategy: "round_robin | weighted_round_robin | sticky_session | least_connections | random"
 health_check_interval_seconds: 2
 rate_limiter_enabled: True
 rate_limit_tokens: 10

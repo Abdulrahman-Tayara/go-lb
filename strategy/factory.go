@@ -1,10 +1,11 @@
 package strategy
 
 const (
-	RoundRobinLoadBalancerStrategy       = "round_robin"
-	RandomLoadBalancerStrategy           = "random"
-	LeastConnectionsLoadBalancerStrategy = "least_connections"
-	StickySessionLoadBalancerStrategy    = "stick_session"
+	RoundRobinLoadBalancerStrategy         = "round_robin"
+	RandomLoadBalancerStrategy             = "random"
+	LeastConnectionsLoadBalancerStrategy   = "least_connections"
+	StickySessionLoadBalancerStrategy      = "stick_session"
+	WeightedRoundRobinLoadBalancerStrategy = "weighted_round_robin"
 )
 
 func GetLoadBalancerStrategy(strategy string, cfg Configs) ILoadBalancerStrategy {
@@ -17,6 +18,8 @@ func GetLoadBalancerStrategy(strategy string, cfg Configs) ILoadBalancerStrategy
 		return NewLeastConnectionsStrategy()
 	case StickySessionLoadBalancerStrategy:
 		return NewStickySessionStrategy(cfg)
+	case WeightedRoundRobinLoadBalancerStrategy:
+		return NewWeightedRoundRobinStrategy()
 	default:
 		return NewRoundRobinStrategy()
 	}
