@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"os"
 	"slices"
+	"strings"
 	"tayara/go-lb/configs"
 	"tayara/go-lb/healthcheck"
 	"tayara/go-lb/lb"
@@ -19,6 +21,7 @@ import (
 
 var (
 	configFilePath = ""
+	logger         *slog.Logger
 )
 
 func init() {
@@ -38,7 +41,9 @@ func main() {
 		panic(errors.Wrap(err, "error while loading the config file"))
 	}
 
-	slog.Info("configs were loaded", "configs", *cfg)
+	logger = getLogger(cfg)
+
+	logger.Info("configs were loaded", "configs", *cfg)
 
 	selectedStrategy := strategy.GetLoadBalancerStrategy(cfg.LoadBalancerStrategy, cfg.StrategyConfigs)
 
@@ -46,6 +51,9 @@ func main() {
 		slices.Clone(cfg.Servers),
 		&cfg.Routing,
 		selectedStrategy,
+		&lb.Options{
+			Logger: getLogger(cfg),
+		},
 	)
 
 	healthChecker := healthcheck.NewHealthChecker(slices.Clone(cfg.Servers))
@@ -67,13 +75,32 @@ func main() {
 	runHTTPServer(cfg, httpHandler)
 }
 
+func getLogger(cfg *configs.Configs) *slog.Logger {
+	mapLogLevel := map[string]slog.Level{
+		"debug": slog.LevelDebug,
+		"info":  slog.LevelInfo,
+		"warn":  slog.LevelWarn,
+		"error": slog.LevelError,
+	}
+	logLevel := mapLogLevel[strings.ToLower(cfg.LogLevel)]
+	if cfg.LogFile != "" {
+		file, err := os.OpenFile(cfg.LogFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			panic(err)
+		}
+		return slog.New(slog.NewTextHandler(file, &slog.HandlerOptions{Level: logLevel}))
+	}
+
+	return slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: logLevel}))
+}
+
 func runHTTPServer(cfg *configs.Configs, handler http.Handler) {
 	server := &http.Server{
 		Addr:    fmt.Sprintf(":%v", cfg.Port),
 		Handler: handler,
 	}
 
-	slog.Info("Load Balancer is running",
+	logger.Info("Load Balancer is running",
 		"address", server.Addr,
 		"configs", *cfg,
 	)

@@ -31,6 +31,8 @@ type loadBalancer struct {
 	cbr        *models.Routing
 	cbrEnabled bool
 
+	logger *slog.Logger
+
 	sync.RWMutex
 }
 
@@ -45,7 +47,7 @@ func (l *loadBalancer) ServerDown(server *models.Server) {
 
 	l.strategy.UpdateServers(l.servers)
 
-	slog.Info("server goes down", "server", *server)
+	l.logger.Info("server goes down", "server", *server)
 }
 
 func (l *loadBalancer) ServerUp(server *models.Server) {
@@ -64,7 +66,7 @@ func (l *loadBalancer) ServerUp(server *models.Server) {
 
 	l.strategy.UpdateServers(l.servers)
 
-	slog.Info("server comes back", "server", *server)
+	l.logger.Info("server comes back", "server", *server)
 }
 
 func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -85,7 +87,7 @@ func (l *loadBalancer) ServeHTTP(writer http.ResponseWriter, request *http.Reque
 
 	l.strategy.RequestServed(selectedServer, request)
 
-	slog.Info("request served in", "server", selectedServer.Url, "time", time.Since(t))
+	l.logger.Info("request served in", "server", selectedServer.Url, "time", time.Since(t))
 }
 
 func (l *loadBalancer) nextWithRetries(request *http.Request, retries int) *models.Server {
@@ -138,16 +140,28 @@ func (l *loadBalancer) serverByName(name string) *models.Server {
 	return nil
 }
 
+type Options struct {
+	Logger *slog.Logger
+}
+
 func NewLoadBalancer(
 	servers []*models.Server,
 	cbr *models.Routing,
 	strategy lbs.ILoadBalancerStrategy,
+	opts ...*Options,
 ) ILoadBalancer {
+	opt := &Options{
+		Logger: slog.Default(),
+	}
+	if len(opts) > 0 && opts[0] != nil {
+		opt = opts[0]
+	}
 	strategy.UpdateServers(servers)
 	return &loadBalancer{
 		servers:    servers,
 		strategy:   strategy,
 		cbr:        cbr,
 		cbrEnabled: cbr != nil && len(cbr.Rules) > 0,
+		logger:     opt.Logger,
 	}
 }

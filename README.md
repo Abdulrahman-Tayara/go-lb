@@ -52,7 +52,9 @@ Configuring Go-LB is a breeze, it supports both JSON and YAML configuration file
   ],
   "tls_enabled": true, // default false
   "tls_cert_file": "/path/to/cert.pem",
-  "tls_key_file": "/path/to/key.pem"
+  "tls_key_file": "/path/to/key.pem",
+  "log_file": "/path/to/log",
+  "log_level": "info | debug | error | warn"
 }
 ```
 
@@ -80,6 +82,8 @@ servers:
 tls_enabled: true # default false
 tls_cert_file: "/path/on/container/cert.pem"
 tls_key_file: "/path/on/container/key.pem"
+log_file: "/path/to/log"
+log_level: "info | debug | error | warn"
 ```
 
 ## Content Based Routing (CBR) Configuration
