@@ -9,6 +9,7 @@ import (
 
 const (
 	defaultHealthCheckIntervalSeconds = 5
+	defaultLogLevel                   = "info"
 )
 
 type Configs struct {
@@ -24,6 +25,8 @@ type Configs struct {
 	TLSEnabled                 bool             `mapstructure:"tls_enabled" json:"tls_enabled" yaml:"tls_enabled"`
 	TLSCertPath                string           `mapstructure:"tls_cert_path" json:"tls_cert_path" yaml:"tls_cert_path"`
 	TLSKeyPath                 string           `mapstructure:"tls_key_path" json:"tls_key_path" yaml:"tls_key_path"`
+	LogFile                    string           `mapstructure:"log_file" json:"log_file" yaml:"log_file"`
+	LogLevel                   string           `mapstructure:"log_level" json:"log_level" yaml:"log_level"`
 }
 
 func LoadConfigs(path string) (*Configs, error) {
@@ -43,6 +46,10 @@ func LoadConfigs(path string) (*Configs, error) {
 
 	if configs.HealthCheckIntervalSeconds == 0 {
 		configs.HealthCheckIntervalSeconds = defaultHealthCheckIntervalSeconds
+	}
+
+	if configs.LogLevel == "" {
+		configs.LogLevel = defaultLogLevel
 	}
 
 	return &configs, nil
